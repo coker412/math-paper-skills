@@ -25,6 +25,10 @@ git clone https://github.com/coker412/math-paper-skills.git
 
 日常解释与改写不需要 LaTeX。生成学习 PDF 需要 XeLaTeX、ctex、AMS 宏包和 Fandol 字体，建议配合 latexmk。缺少编译环境时，skill 应保留可编辑源并明确 PDF 尚未生成。
 
+## 看实际样例
+
+[三个公开样例](examples/README.md)：条件性摘要改写、证明概览改写、Hessian 正定性的中文学习讲解。取材于 OpenAI 公开稿件，附原文定位、英文改写、中文说明和可重复的局部计算检查。
+
 ## 怎么用
 
 **修改论文，但保持数学内容和作者已确定的选择：**
@@ -53,7 +57,7 @@ git clone https://github.com/coker412/math-paper-skills.git
 
 ## Writing DNA：从论文中学习写作方法
 
-写作 skill 内置[原版 Writing DNA](math-paper-writing/assets/writing-dna-skill/SKILL.md)及其英文流程、中英文模板和原版引用的清理 skill，并保留固定版本与许可。蒸馏时读取原版，再应用[数学适配](math-paper-writing/references/style-distillation.md)；无需另装蒸馏插件，普通改稿不加载整套蒸馏材料。数学适配保留数学条件、符号和证明状态，并支持用户明确选择的小样本模式，不把原版的风格相似度目标当作已经测得的分数。
+写作 skill 内置[原版 Writing DNA](math-paper-writing/assets/writing-dna-skill/SKILL.md)及其英文流程、中英文模板和原版引用的清理 skill，并保留固定版本与许可。数学蒸馏直接触发原版 `writing-dna-skill`，入口只增加一段数学适配链接；随后应用[数学适配](math-paper-writing/references/style-distillation.md)；无需另装蒸馏插件，普通改稿不加载整套蒸馏材料。数学适配保留数学条件、符号和证明状态，并支持用户明确选择的小样本模式，不把原版的风格相似度目标当作已经测得的分数。
 
 - **标准模式：至少 20 篇完整、去重的作品，生成五份分析文档。**
 - **也支持用户主动选择的 3 篇以上小样本模式**，输出暂定画像；1–2 篇可以做局部分析。
@@ -61,7 +65,8 @@ git clone https://github.com/coker412/math-paper-skills.git
 - 可以分析自己喜欢的最终稿，也可以比较修改前后的稿件；私人材料应留在自己的工作目录。
 
 ```text
-使用 $math-paper-writing，为这位作者做标准 Writing DNA 蒸馏。
+使用 $writing-dna-skill，为这位数学作者做标准 Writing DNA 蒸馏，
+并读取随包的数学适配说明。
 收集至少20篇相关的完整作品，列出篇目、版本和证据页码，
 分析重复选择和相反例子，输出五份报告。不要用小样本替代本次要求。
 ```
@@ -81,6 +86,8 @@ git clone https://github.com/coker412/math-paper-skills.git
 这些包提炼的是有出处、带适用条件的写作选择。局部改写只加载相关规则与原文段落；完整画像指导的写作按说明读取五份报告和五篇匹配的完整来源。普通改稿不必加载所有包。[详细范围与方法](math-paper-writing/references/field-profiles.md)。另有 [Tao 跨领域方法速览](math-paper-writing/references/author-models.md)。
 
 ## 集成与边界
+
+`lieflat-less-ai-tone` 是原版 Writing DNA 附带的成稿清理 skill：只改规则清单命中的表达，保留未命中的文字和文章框架。它与去防御性写作有部分重叠，但不是同一个工具。数学工作按需要选择一种局部清理方式，不默认连续执行多个清理 skill。
 
 `anti-defensive-writing` 和 Humanizer 是按需使用的可选辅助 skill。去掉空泛示弱时仍保留必要条件、反例和未解决步骤；不要求每次改稿都连续运行多轮重写。未安装且无法读取原始辅助说明时，继续使用本 skill 的基本指导，并如实说明未加载该辅助 skill。
 
