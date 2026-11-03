@@ -25,6 +25,21 @@ git clone https://github.com/coker412/math-paper-skills.git
 
 日常解释与改写不需要 LaTeX。生成学习 PDF 需要 XeLaTeX、ctex、AMS 宏包和 Fandol 字体，建议配合 latexmk。缺少编译环境时，skill 应保留可编辑源并明确 PDF 尚未生成。
 
+## 可选小工具
+
+两个 skill 均自带相同的两个工具，可以单独安装使用。在对应 skill 目录运行：
+
+```bash
+python scripts/pdf_pages.py /path/to/paper.pdf --cache /path/to/reading/pages.json
+python scripts/pdf_pages.py /path/to/paper.pdf --cache /path/to/reading/pages.json --find "Proposition 2.1"
+python scripts/pdf_pages.py /path/to/paper.pdf --cache /path/to/reading/pages.json --pages 3-5
+python scripts/check_tex_log.py /path/to/_build/main.log /path/to/_build/main.blg
+```
+
+PDF 工具首次提取需要该 Python 环境安装 PyMuPDF；缓存绑定原 PDF 的 SHA-256，源文件变化后重新提取。默认只输出页数等索引，指定页码时完整输出对应页；`--pages all` 可读全部。优先复用已有带页码文本。空白提取不代表空白原页，需要另看 PDF 或 OCR；搜索也不能替代全文阅读。
+
+日志工具只用 Python 标准库，不重新封装编译器。只传实际存在且属于本次构建的日志；问题总数完整，默认每类显示前三处，`--examples` 可调整。退出码 0/1/2 分别表示未匹配到问题、发现问题、输入不可读或为空。它不证明 PDF 已重新生成，也不判断数学正确性。两个工具不调用模型 API；减少的是临时代码和无关输出，尚未测量端到端 token 节省。
+
 ## 看实际样例
 
 [公开样例](examples/README.md)：先看从十六组试写中筛出的[六组改写对照](examples/04-selected-revisions.md)，包含原段完整中译、英文改写与信息保留说明；另有摘要和证明概览的取舍讨论、Hessian 正定性的学习讲解。均取材于 OpenAI 公开稿件，附固定原文定位。
