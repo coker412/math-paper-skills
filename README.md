@@ -27,7 +27,7 @@ git clone https://github.com/coker412/math-paper-skills.git
 
 ## 看实际样例
 
-[三个公开样例](examples/README.md)：条件性摘要改写、证明概览改写、Hessian 正定性的中文学习讲解。取材于 OpenAI 公开稿件，附原文定位、英文改写、中文说明和可重复的局部计算检查。
+[公开样例](examples/README.md)：先看从十六组试写中筛出的[六组改写对照](examples/04-selected-revisions.md)，包含原段完整中译、英文改写与信息保留说明；另有摘要和证明概览的取舍讨论、Hessian 正定性的学习讲解。均取材于 OpenAI 公开稿件，附固定原文定位。
 
 ## 怎么用
 
