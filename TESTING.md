@@ -60,3 +60,7 @@
 ## Introduction执行检查：2026-11-04
 
 新增E32，用Ellenberg–Gijswijt公开论文的正文与经核对的相关文献写出引言，实际执行文字回读、来源对照和局部回改，并做缺少文献、错误压缩与简短概览三个控制案例；详见[原始草稿修改与检查](tests/writing-quality.md#e32-follow-up-an-introduction-from-a-public-mathematical-argument)。同一上下文重做E01–E08片段级检查，未把它们算作完整稿件测试。32是案例定义数，不是32次独立测试通过。没有新上下文测试、读者试验或新的LaTeX构建。
+
+## 摘要与引言成对蒸馏：2026-11-04
+
+在原版DNA的数学适配中，增加逐篇单独分析摘要、完整引言及其正文联系的要求。既有Tao画像先补做2/20篇的成对细读，明确没有完成全部20篇的新分析；来源版本哈希与关键公式页面已核对。E32补充实际摘要/引言应用及“不必添加方法句”的对照，见[输出和检查](tests/writing-quality.md#e32-paired-distillation-follow-up-abstract-versus-introduction)。本轮是同一上下文的局部画像更新，不是独立读者验证。
