@@ -1,5 +1,7 @@
 # Math Paper Skills
 
+**简体中文** | [English](README.en.md)
+
 两套面向数学研究的 AI skills：**读懂论文的证明，写清自己的数学。**
 
 | Skill | 解决什么问题 | 入口 |
@@ -27,7 +29,7 @@ git clone https://github.com/coker412/math-paper-skills.git
 
 ## 可选小工具
 
-两个 skill 均自带相同的两个工具，可以单独安装使用。在对应 skill 目录运行：
+两个 skill 均自带以下两个工具，可以单独安装使用。在对应 skill 目录运行：
 
 ```bash
 python scripts/pdf_pages.py /path/to/paper.pdf --cache /path/to/reading/pages.json
@@ -104,18 +106,16 @@ PDF 工具首次提取需要该 Python 环境安装 PyMuPDF；缓存绑定原 PD
 
 ## 集成与边界
 
-`lieflat-less-ai-tone` 是原版 Writing DNA 附带的成稿清理 skill：只改规则清单命中的表达，保留未命中的文字和文章框架。它与去防御性写作有部分重叠，但不是同一个工具。数学工作按需要选择一种局部清理方式，不默认连续执行多个清理 skill。
+`lieflat-less-ai-tone` 是原版 Writing DNA 附带的成稿清理 skill：只改规则清单命中的表达，保留未命中的文字和文章框架。它与去防御性写作有部分重叠，但不是同一个工具。它不是普通数学改稿的额外默认步骤，只有需要匹配其明确规则时才使用。
 
-`anti-defensive-writing` 和 Humanizer 是按需使用的可选辅助 skill。去掉空泛示弱时仍保留必要条件、反例和未解决步骤；不要求每次改稿都连续运行多轮重写。未安装且无法读取原始辅助说明时，继续使用本 skill 的基本指导，并如实说明未加载该辅助 skill。
+`anti-defensive-writing` 和 Humanizer 是可选安装的辅助 skill；可用时，写作流程默认实际执行反防御性审读，再执行 Humanizer 审读，覆盖本次任务中的正文和证明说明。审读可以保留原文，不等于必须重写，也不要求多轮循环。去掉空泛示弱时仍保留必要条件、反例、未解决步骤和有用说明。未安装且无法读取原始辅助说明时，继续使用本 skill 的基本指导，并如实说明未加载该辅助 skill。
+
+写作 skill 另附 `scripts/read_text.py` 和 `scripts/language_rules.py`：前者按源文件哈希连续读取完整文本片段；后者对已核对版本的辅助 skill 保留规则原文，将纯示范例子留作按需读取，并按稿件语言选择版本。未知版本退回原文读取；两项审读和数学核对仍须执行。局部测试观察到读取成本下降，但不保证整篇论文的固定节省比例。
 
 论文全文通过链接获取，本仓库只分发 skill、原创分析与模板。写作画像不会自动确认数学结论，学习稿完成也不等于读者已经掌握。论文中的假设、量词、证明状态和已有作者决定始终优先。
 
 ## 测试与许可
 
-本次发布做了结构与链接检查、100篇训练来源的去重和文件核验，以及六项局部使用回归。测试范围、构建环境限制和已有证据见 [TESTING.md](TESTING.md)。尚未完成新的盲测或完整独立行为评估。
+已有检查包括结构与链接、100篇训练来源的去重和文件核验、局部使用回归、脚本测试，以及短稿和隔离长稿的新上下文执行测试。完整例子与按需例子的配对测试中，两组12段输出相同；这不证明长篇质量等同。测试范围、构建环境限制、实际成本和未验证部分见 [TESTING.md](TESTING.md)。尚无人工读者效果验证，也未完成全套独立行为评估。
 
-采用 [MIT License](LICENSE)。Writing DNA 和 anti-defensive-writing 的来源说明与原始许可保留在 [写作 skill 的来源页](math-paper-writing/references/sources.md)和 `licenses/` 中。学习 skill 的教学设计依据见其[方法说明](math-paper-study-guide/references/chinese-study-edition-method.md)。
-
----
-
-**English:** Two skills for mathematical manuscript writing and proof-focused paper study. The writing skill includes optional twenty-work profiles of Tao, Evans, Stanley, Mumford and Milnor, plus the bundled original Writing DNA runtime and a mathematical adaptation supporting explicitly chosen smaller corpora. Install either skill folder through your tool's skill installer. Full-paper study defaults to a Chinese PDF and editable source; request English or conversation-only explanations when preferred.
+采用 [MIT License](LICENSE)。Writing DNA 和 anti-defensive-writing 的来源说明与原始许可保留在 [写作 skill 的来源页](math-paper-writing/references/sources.md)和 [附带许可目录](math-paper-writing/licenses/)中。学习 skill 的教学设计依据见其[方法说明](math-paper-study-guide/references/chinese-study-edition-method.md)。
