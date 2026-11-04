@@ -1,7 +1,8 @@
-"""Portable checks for the identical helpers shipped with each standalone skill."""
+"""Portable checks for skill helpers."""
 
 import importlib.util
 import json
+import hashlib
 from pathlib import Path
 import subprocess
 import sys
@@ -29,6 +30,8 @@ def module(name):
 
 pdf = module("pdf_pages")
 logs = module("check_tex_log")
+text_reader = module("read_text")
+language_rules = module("language_rules")
 
 
 class Helpers(unittest.TestCase):
@@ -58,6 +61,96 @@ class Helpers(unittest.TestCase):
         for name in ["pdf_pages.py", "check_tex_log.py"]:
             self.assertEqual((SCRIPTS / name).read_bytes(),
                              (ROOT / "math-paper-study-guide/scripts" / name).read_bytes())
+
+    def test_language_view_preserves_rules_and_selects_language(self):
+        source = "Rule: keep conditions.\r\nBefore:\r\n> padding\r\nAfter:\r\n> direct\r\nRule: preserve uncertainty.\r\n中文规则：保留条件。\r\n"
+        path = self.root / "SKILL.md"
+        path.write_bytes(source.encode("utf-8"))
+        catalog = {"test": {"sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                            "line_count": 7, "examples": [[2, 5]],
+                            "languages": {"en": [[1, 6]], "zh": [[7, 7]], "both": [[1, 7]]}}}
+        _, english = language_rules.rule_view(path, "en", catalog)
+        self.assertIn("Rule: keep conditions.\r\n", english)
+        self.assertIn("Rule: preserve uncertainty.\r\n", english)
+        self.assertNotIn("> padding", english)
+        self.assertNotIn("中文", english)
+        self.assertIn("source lines 2-5", english)
+        _, chinese = language_rules.rule_view(path, "zh", catalog)
+        self.assertEqual(chinese, "中文规则：保留条件。\r\n")
+        _, both = language_rules.rule_view(path, "both", catalog)
+        self.assertEqual(both, english + chinese)
+
+    def test_language_view_unknown_revision_fails_without_filtering(self):
+        path = self.root / "SKILL.md"
+        path.write_text("A new rule must not be silently omitted.\n")
+        with self.assertRaisesRegex(ValueError, "Unrecognized source revision"):
+            language_rules.rule_view(path)
+        result = self.run_tool("language_rules.py", path, "--language", "en")
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("Read the original", result.stderr)
+        self.assertEqual(self.run_tool("language_rules.py", self.root / "missing").returncode, 2)
+
+    def test_language_view_catalog_ranges_are_valid(self):
+        catalog = json.loads((SCRIPTS / "language-skill-ranges.json").read_text())
+        for item in catalog.values():
+            self.assertEqual(len(item["sha256"]), 64)
+            groups = [item["examples"], *item["languages"].values()]
+            for ranges in groups:
+                previous = 0
+                for start, end in ranges:
+                    self.assertTrue(previous < start <= end <= item["line_count"])
+                    previous = end
+            both = {n for a, b in item["languages"]["both"] for n in range(a, b + 1)}
+            self.assertEqual(both, set(range(1, item["line_count"] + 1)))
+
+    def test_text_slices_roundtrip_with_unicode_and_long_lines(self):
+        source = "定义\r\n" + "x" * 30001 + "\nλ ≤ 1：🙂\n"
+        path = self.root / "source with spaces.txt"
+        path.write_bytes(source.encode("utf-8"))
+        start, digest, slices = 0, None, []
+        while True:
+            header, body = text_reader.read_slice(path, start, 127, digest)
+            self.assertLessEqual(len(body), 127)
+            self.assertEqual(header["start"], start)
+            self.assertEqual(header["end"], start + len(body))
+            self.assertEqual(header["total_chars"], len(source))
+            digest = header["sha256"]
+            slices.append(body)
+            if header["next_start"] is None:
+                break
+            start = header["next_start"]
+        self.assertEqual("".join(slices), source)
+
+    def test_text_reader_rejects_changed_source_and_bad_cursors(self):
+        path = self.root / "text.txt"
+        path.write_text("abc", encoding="utf-8")
+        header, _ = text_reader.read_slice(path)
+        for start, chars in [(-1, 1), (4, 1), (0, 0), (0, 24001)]:
+            with self.assertRaises(ValueError):
+                text_reader.read_slice(path, start, chars)
+        path.write_text("def", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "Source changed"):
+            text_reader.read_slice(path, 1, 1, header["sha256"])
+        path.write_bytes(b"\xff")
+        with self.assertRaises(UnicodeError):
+            text_reader.read_slice(path)
+
+    def test_text_reader_cli_exact_payload_and_empty_source(self):
+        path = self.root / "text.txt"
+        path.write_bytes("中\r\nlast".encode("utf-8"))
+        result = subprocess.run([sys.executable, str(SCRIPTS / "read_text.py"), str(path)],
+                                capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        header, body = result.stdout.split(b"\n", 1)
+        self.assertIsNone(json.loads(header)["next_start"])
+        self.assertEqual(body, path.read_bytes())
+        path.write_bytes(b"")
+        header, body = text_reader.read_slice(path)
+        self.assertEqual(body, "")
+        self.assertIsNone(header["next_start"])
+        self.assertEqual(self.run_tool("read_text.py", path, "--start", "1").returncode, 2)
+        self.assertEqual(self.run_tool("read_text.py", self.root / "missing.txt").returncode, 2)
 
     def test_page_selection(self):
         self.assertEqual(pdf.select_pages("3,1-2,2", 3), [1, 2, 3])

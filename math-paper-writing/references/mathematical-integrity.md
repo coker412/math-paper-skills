@@ -24,6 +24,12 @@ For each main claim, maintain a compact ledger, explicitly or mentally:
 
 After a prose edit, compare the edited claim with this ledger.
 
+## Notation and necessity
+
+- For an existing or collaborative manuscript, treat the authoritative author's notation as locked. Before drafting, make a local notation map for every object touched and reuse the exact established symbol in the corresponding part of the paper. A familiar alternative symbol is not a reason to rename an object. If the argument genuinely needs a new object, first check that no existing symbol already serves it, apply the necessity gate below, and state its relation to the established notation at first use. Before handoff, inspect the baseline diff and search the added text for aliases, renamed spaces, and symbols that occur only once; remove any that are not mathematically necessary.
+
+- Apply a necessity gate before adding any definition, symbol, named construction, lemma, remark, or side conclusion. Add it when it is needed for correctness, prevents a real ambiguity, materially simplifies the argument, is reused downstream, or the author explicitly requests a more conceptual framework. Prefer direct expressions for one-use objects. A stronger identification or corollary may be added when it materially sharpens the paper's main message, supports later arguments, or has author-requested conceptual value; otherwise do not add it by default. Whether or not it is inserted into the manuscript, always report a newly established stronger conclusion to the author, together with its value and added expository cost. If removing an entity leaves the proof, later text, and intended contribution unchanged, omit it.
+
 ## Definition and normalization audit
 
 Before applying an external result or writing a proof, check the definitions and normalizations that affect it. Typical fault lines include:
