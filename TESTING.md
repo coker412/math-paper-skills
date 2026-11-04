@@ -56,3 +56,7 @@
 `python examples/check_examples.py` 通过：相对链接、来源记录、60 组有理数 Hessian 检查、具体二维矩阵、混合项遗漏和退化方向检查。一般局部恒等式的推导另写在学习页；有限检查不替代证明。示例是局部 Markdown 交付，没有声称生成整篇学习 PDF。
 
 数学蒸馏直接调用原版 `writing-dna-skill`。原版入口只新增一段链接数学适配的说明，原始哈希和分发哈希分别保存。入口、数学适配的互相定位和显式小样本规则经过静态检查；尚未测量不同宿主自动选择入口的实际成功率。
+
+## Introduction执行检查：2026-11-04
+
+新增E32，用Ellenberg–Gijswijt公开论文的正文与经核对的相关文献写出引言，实际执行文字回读、来源对照和局部回改，并做缺少文献、错误压缩与简短概览三个控制案例；详见[原始草稿修改与检查](tests/writing-quality.md#e32-follow-up-an-introduction-from-a-public-mathematical-argument)。同一上下文重做E01–E08片段级检查，未把它们算作完整稿件测试。32是案例定义数，不是32次独立测试通过。没有新上下文测试、读者试验或新的LaTeX构建。
